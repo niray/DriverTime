@@ -55,6 +55,10 @@ public class FloatService extends Service {
         handler.postDelayed(task, delaytime);
     }
 
+    private void toLog(String msg) {
+        Log.i("Drive", msg);
+    }
+
     private void createView() {
         wm = (WindowManager) getApplicationContext().getSystemService(WINDOW_SERVICE);
         wmParams = ((MyApplication) getApplication()).getMywmParams();
@@ -62,7 +66,7 @@ public class FloatService extends Service {
         wmParams.flags |= 8;
         wmParams.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
         wmParams.x = 0;
-        wmParams.y = 220;
+        wmParams.y = 370;
         wmParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
         wmParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
         wmParams.format = 1;
@@ -73,7 +77,7 @@ public class FloatService extends Service {
             public boolean onTouch(View v, MotionEvent event) {
                 x = event.getRawX() - 360;
                 y = event.getRawY() - 25;
-                Log.i("currP", "currX" + x + "====currY" + y);
+                toLog("currP" + "currX" + x + "====currY" + y);
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         state = MotionEvent.ACTION_DOWN;
@@ -81,7 +85,7 @@ public class FloatService extends Service {
                         StartY = y;
                         mTouchStartX = event.getX();
                         mTouchStartY = event.getY();
-                        Log.i("startP", "startX" + mTouchStartX + "====startY" + mTouchStartY);
+                        toLog("startP" + "startX" + mTouchStartX + "====startY" + mTouchStartY);
                         break;
                     case MotionEvent.ACTION_MOVE:
                         state = MotionEvent.ACTION_MOVE;

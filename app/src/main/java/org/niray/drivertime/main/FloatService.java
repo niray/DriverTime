@@ -21,9 +21,9 @@ import java.util.Date;
 
 public class FloatService extends Service {
 
-    WindowManager wm = null;
+    WindowManager wManager = null;
     WindowManager.LayoutParams wmParams = null;
-    View view;
+    View windowView;
     int state;
     TextView tv_time;
     View iv_close;
@@ -40,40 +40,40 @@ public class FloatService extends Service {
         public void run() {
             dataRefresh();
             handler.postDelayed(this, delaytime);
-            wm.updateViewLayout(view, wmParams);
+            wManager.updateViewLayout(windowView, wmParams);
         }
     };
 
     @Override
     public void onCreate() {
         super.onCreate();
-        view = LayoutInflater.from(this).inflate(R.layout.floating, null);
-        tv_time = (TextView) view.findViewById(R.id.tv_time);
-        iv_close = view.findViewById(R.id.iv_close);
+        windowView = LayoutInflater.from(this).inflate(R.layout.floating, null);
+        tv_time = (TextView) windowView.findViewById(R.id.tv_time);
+        iv_close = windowView.findViewById(R.id.iv_close);
         dataRefresh();
         createView();
         handler.postDelayed(task, delaytime);
     }
+
 
     private void toLog(String msg) {
         Log.i("Drive", msg);
     }
 
     private void createView() {
-        wm = (WindowManager) getApplicationContext().getSystemService(WINDOW_SERVICE);
-        wmParams = ((MyApplication) getApplication()).getMywmParams();
-        wmParams.type = 2002;
+        wManager = (WindowManager) getApplicationContext().getSystemService(WINDOW_SERVICE);
+        wmParams = ((MyApplication) getApplication()).getWindowParams();
         wmParams.flags |= 8;
         wmParams.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
         wmParams.x = 0;
-        wmParams.y = 370;
+        wmParams.y = 320;
         wmParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
         wmParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
         wmParams.format = 1;
 
-        wm.addView(view, wmParams);
+        wManager.addView(windowView, wmParams);
 
-        view.setOnTouchListener(new OnTouchListener() {
+        windowView.setOnTouchListener(new OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
                 x = event.getRawX() - 360;
                 y = event.getRawY() - 25;
@@ -131,13 +131,16 @@ public class FloatService extends Service {
     private void updateViewPosition() {
         wmParams.x = (int) (x - mTouchStartX);
         wmParams.y = (int) (y - mTouchStartY);
-        wm.updateViewLayout(view, wmParams);
+        wManager.updateViewLayout(windowView, wmParams);
     }
 
     @Override
     public void onDestroy() {
         handler.removeCallbacks(task);
-        wm.removeView(view);
+
+        if (wManager != null && windowView != null) {
+            wManager.removeView(windowView);
+        }
         super.onDestroy();
     }
 

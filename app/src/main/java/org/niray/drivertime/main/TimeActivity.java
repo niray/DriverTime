@@ -76,12 +76,12 @@ public class TimeActivity extends Activity {
 
     //启动服务
     private void PermissionFinish() {
-
         Intent service = new Intent(mAct, FloatService.class);
         startService(service);
 
         //打开行者App
         startXingZhe();
+        finish();
     }
 
     /**
